@@ -167,7 +167,7 @@ nav {
 .updated-badge {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.6rem; font-weight: 600;
-    background: var(--accent); color: var(--dark);
+    background: var(--gold); color: var(--dark);
     padding: 0.15rem 0.5rem; border-radius: 4px;
     letter-spacing: 0.08em; vertical-align: middle;
     margin-left: 0.5rem;

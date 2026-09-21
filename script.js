@@ -69,9 +69,21 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, { threshold: 0.1 });
 
-document.querySelectorAll('.system-item, .service-card, .stat-box, .case-study, .bento-item, .kpi-card').forEach(el => {
+document.querySelectorAll('.system-item, .service-card, .stat-box, .case-study, .bento-item, .kpi-card, .pm-mini').forEach(el => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(20px)';
     el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
     observer.observe(el);
+});
+
+// PM lifecycle demo: click a stage to mark progress through the README flow
+document.querySelectorAll('#pmLifecycle .pm-stage').forEach(stage => {
+    stage.addEventListener('click', () => {
+        const stages = Array.from(document.querySelectorAll('#pmLifecycle .pm-stage'));
+        const idx = stages.indexOf(stage);
+        stages.forEach((s, i) => {
+            s.classList.toggle('is-done', i < idx);
+            s.classList.toggle('is-active', i === idx);
+        });
+    });
 });

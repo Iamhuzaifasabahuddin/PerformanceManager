@@ -238,44 +238,127 @@
                 </div>
             </div>
 
+            <div class="divider-label"><span>What it is</span></div>
+            <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:1rem;">Full-featured, real-time project management platform for agencies — <strong style="color:var(--text);">workspaces → clients → teams → tasks → posts &amp; comments</strong>, with an approval-orchestrated completion workflow, role-based permissions, Slack DMs, WebPush notifications, S3 file pipeline, and a Redis real-time layer. Live at production.topsoftdigitals.pk.</p>
+
+            <div class="pm-hierarchy" aria-label="Platform hierarchy">
+                <span class="pm-hier-node">Workspaces <em>e.g. USA / UK</em></span>
+                <span class="pm-hier-arrow">→</span>
+                <span class="pm-hier-node">Clients <em>billing · balances · auto-archive</em></span>
+                <span class="pm-hier-arrow">→</span>
+                <span class="pm-hier-node">Teams <em>8 roles · single lead</em></span>
+                <span class="pm-hier-arrow">→</span>
+                <span class="pm-hier-node">Tasks <em>pending → approval → completed</em></span>
+                <span class="pm-hier-arrow">→</span>
+                <span class="pm-hier-node">Posts &amp; Comments <em>mentions · S3 files</em></span>
+            </div>
+
             <div class="divider-label"><span>Architecture Overview</span></div>
 
             <div class="arch-flow">
-                <div class="arch-node">Multi-Tenant DB<span class="arch-sub">PostgreSQL + PgBouncer</span></div>
+                <div class="arch-node">HTMX UI<span class="arch-sub">Bootstrap 5 · no SPA</span></div>
                 <span class="arch-arrow">→</span>
-                <div class="arch-node">API Layer<span class="arch-sub">Django + Redis</span></div>
+                <div class="arch-node">Uvicorn ASGI<span class="arch-sub">Django 6.0 + Channels 4</span></div>
                 <span class="arch-arrow">→</span>
-                <div class="arch-node">Async Workers<span class="arch-sub">Celery + Redis</span></div>
+                <div class="arch-node">Data<span class="arch-sub">PostgreSQL · Redis · S3</span></div>
                 <span class="arch-arrow">→</span>
-                <div class="arch-node">Frontend<span class="arch-sub">HTML · CSS · JS</span></div>
+                <div class="arch-node">Celery gevent ×20<span class="arch-sub">Slack · SMTP · WebPush</span></div>
+                <span class="arch-arrow">→</span>
+                <div class="arch-node">Live<span class="arch-sub">WS /ws/notifications/</span></div>
             </div>
+            <p class="footnote">HTTP + WebSockets on one ASGI app · Redis shared for cache, sessions, channel layer &amp; broker · S3-compatible object store via presigned URLs · static via WhiteNoise + Brotli · hosted on Railway.</p>
+
+            <div class="divider-label"><span>Task Lifecycle — approval-orchestrated</span></div>
+
+            <div class="pm-lifecycle" id="pmLifecycle">
+                <div class="pm-stage is-active" data-stage="pending">
+                    <span class="pm-dot"></span>
+                    <strong>Pending</strong>
+                    <em>assignee creates task · priorities low → urgent · due_status()</em>
+                </div>
+                <span class="pm-lc-arrow">→</span>
+                <div class="pm-stage" data-stage="approval">
+                    <span class="pm-dot"></span>
+                    <strong>Awaiting approval</strong>
+                    <em>assignee requests completion</em>
+                </div>
+                <span class="pm-lc-arrow">→</span>
+                <div class="pm-stage" data-stage="completed">
+                    <span class="pm-dot"></span>
+                    <strong>Completed</strong>
+                    <em>admin approves · client auto-archived</em>
+                </div>
+            </div>
+            <div class="pm-lifecycle-note">
+                <span>Decline or undo → back to <strong>Pending</strong></span>
+                <span class="pm-sep">·</span>
+                <span>Revision comment on a completed task → reopens to <strong>Pending</strong></span>
+                <span class="pm-sep">·</span>
+                <span class="toggle-trigger pm-demo-btn" data-target="#pmLifecycleDemo" style="margin-top:0;">Try the flow ▾</span>
+            </div>
+            <div class="toggle-content" id="pmLifecycleDemo">
+                <div class="code-block" style="margin-top:0.75rem;">pending <span class="hl">→ request completion →</span> awaiting_approval <span class="hl2">→ approve →</span> completed <span class="hl">→ revision comment →</span> pending<br>awaiting_approval <span class="hl2">→ decline / undo →</span> pending &nbsp;·&nbsp; completed <span class="hl2">→ client auto-archived</span></div>
+            </div>
+
+            <div class="divider-label"><span>Capabilities — per README</span></div>
 
             <div class="bento-grid">
                 <div class="bento-item">
-                    <span class="bento-icon">🏗️</span>
-                    <h4>Multi-Tenant Ecosystem</h4>
-                    <p>Consolidates client profiles, team assignments, and financial tracking into a single source of truth, replacing manual spreadsheets with a scalable database.</p>
-                </div>
-                <div class="bento-item">
-                    <span class="bento-icon">⚡</span>
-                    <h4>Slack &amp; Communication Hub</h4>
-                    <p>Built-in integration engine triggers instant DM notifications, automated file uploads, and Celery-powered status alerts for real-time project transparency.</p>
+                    <span class="bento-icon">🗂️</span>
+                    <h4>Workspaces &amp; Clients</h4>
+                    <p>Workspaces (USA / UK) with granular membership. Clients carry required contact email, billing &amp; payment tracking (card / wire / cheque), outstanding balances, and auto-archive when work completes.</p>
                 </div>
                 <div class="bento-item">
                     <span class="bento-icon">👥</span>
-                    <h4>Dynamic Team Provisioning</h4>
-                    <p>Auto-generates departmental teams (Marketing, Design, etc.) upon client onboarding with role-based access and permissions for all project assets.</p>
+                    <h4>Teams — 8 roles</h4>
+                    <p>Admin, manager, project manager, marketing, designer, developer, editor, publisher — with a single team lead and role-based access across project assets.</p>
+                    <div class="role-pills"><span>admin</span><span>manager</span><span>project mgr</span><span>marketing</span><span>designer</span><span>developer</span><span>editor</span><span>publisher</span></div>
                 </div>
                 <div class="bento-item">
-                    <span class="bento-icon">📊</span>
-                    <h4>Financial Auditing</h4>
-                    <p>Real-time tracking of task approval cycles and payment statuses provides actionable insights into project health, outstanding balances, and team performance.</p>
+                    <span class="bento-icon">✅</span>
+                    <h4>Tasks &amp; Posts</h4>
+                    <p>Priorities low → urgent plus <code>due_status()</code> categorisation. Task-linked posts &amp; threaded comments with <code>@username</code> mentions and S3 attachments via presigned upload URLs.</p>
                 </div>
                 <div class="bento-item">
+                    <span class="bento-icon">🔔</span>
+                    <h4>Real-time notifications</h4>
+                    <p>Redis pub/sub → Channels WebSockets for live badge &amp; activity toasts, plus VAPID Web Push to all devices. Separate <strong>Feedback</strong> panel (live badge, search, pagination, mark-all-read) for @mentions and revision requests.</p>
+                </div>
+                <div class="bento-item">
+                    <span class="bento-icon">📨</span>
+                    <h4>Slack integration</h4>
+                    <p>Signature-verified slash commands <code>/tasks</code> (open tasks by due date) and <code>/requests</code> (awaiting-approval queue for admins), plus rich personalised DM delivery for every notification type.</p>
+                </div>
+                <div class="bento-item">
+                    <span class="bento-icon">⌨️</span>
+                    <h4>Command palette · Ctrl+K</h4>
+                    <p>Per-keystroke JSON search (2-char min, 300 ms debounce, 120/m limit, 300 s Redis cache) across tasks, clients, posts, comments &amp; files — scoped to your access. Quick Actions deep-link task / post / client creation.</p>
+                </div>
+                <div class="bento-item">
+                    <span class="bento-icon">📢</span>
+                    <h4>Admin Hub + Activity</h4>
+                    <p>Bulk notifications, bulk role assigns, user directory, one-click archived-client CSV export. Global audit activity feed with versioned cache invalidation. Auth: email verification, <code>@topsoftdigitals.pk</code> restriction, password reset.</p>
+                </div>
+                <div class="bento-item">
+                    <span class="bento-icon">💳</span>
+                    <h4>Sales &amp; Payments ledger</h4>
+                    <p>Superuser-only, separate from workspace clients. PPC / Upsell deals, card / cheque / wire, upfront auto-booked as a PPC payment (never double-counted), upseller attribution, PPC-vs-Upsell report with monthly / workspace / top-client breakdowns.</p>
+                </div>
+                <div class="bento-item bento-wide">
                     <span class="bento-icon">🛡️</span>
-                    <h4>Email &amp; Chargeback Alerts</h4>
-                    <p>Built-in IMAP scanner watches support mailboxes for chargeback, refund &amp; complaint language across a 236-keyword list, deduplicates by Message-ID, and auto-refreshes the alerts panel so disputed charges are caught and tracked without manual checks.</p>
+                    <h4>Email &amp; chargeback alerts — 236 keywords</h4>
+                    <p>IMAP scanner flags chargeback / refund / complaint language, runs async on the <code>email</code> queue via “Scan Now”, dedupes by Message-ID, downloads text parts only, and auto-refreshes the alerts panel (5 s poll) — no manual reload. Same keyword discipline behind the dispute-tracking cases below.</p>
                 </div>
+            </div>
+
+            <div class="divider-label"><span>Performance &amp; deployment</span></div>
+            <div class="pm-mini-grid">
+                <div class="pm-mini"><strong>Hot cache</strong><span>Versioned Redis fragments · 1 h TTL · pooled client</span></div>
+                <div class="pm-mini"><strong>DB diet</strong><span>select/prefetch_related + .only() · zero N+1 · indexed ordering</span></div>
+                <div class="pm-mini"><strong>Transfer</strong><span>GZip + Brotli (~70–80% smaller) · WhiteNoise manifest · paginated 10–20</span></div>
+                <div class="pm-mini"><strong>Safety</strong><span>ratelimit + 429 handler · atomic + select_for_update · cached auth (180 s)</span></div>
+                <div class="pm-mini"><strong>Railway</strong><span>Uvicorn (uvloop, conc. 256) · Celery gevent ×20 · PgBouncer · 1 shared REDIS_URL</span></div>
+                <div class="pm-mini"><strong>Tests</strong><span>pytest (SQLite :memory:, eager Celery) · Locust login + weighted hits</span></div>
             </div>
 
             <div class="divider-label"><span>Key Metrics</span></div>
@@ -300,15 +383,20 @@
             </div>
 
             <div class="doc-section">
-                <h5>Tech Stack</h5>
+                <h5>Tech Stack — per README</h5>
                 <p>
-                    <span class="tag-pill tag-gold">Django</span>
-                    <span class="tag-pill tag-gold">PostgreSQL</span>
-                    <span class="tag-pill tag-blue">PgBouncer</span>
-                    <span class="tag-pill tag-blue">Celery</span>
-                    <span class="tag-pill tag-blue">Redis</span>
-                    <span class="tag-pill tag-green">Slack API</span>
-                    <span class="tag-pill tag-orange">HTML · CSS · JS</span>
+                    <span class="tag-pill tag-gold">Python 3.13</span>
+                    <span class="tag-pill tag-gold">Django 6.0</span>
+                    <span class="tag-pill tag-gold">PostgreSQL + PgBouncer</span>
+                    <span class="tag-pill tag-blue">Channels 4 · Redis pub/sub</span>
+                    <span class="tag-pill tag-blue">Celery 5 · gevent ×20</span>
+                    <span class="tag-pill tag-blue">Uvicorn · uvloop</span>
+                    <span class="tag-pill tag-green">pywebpush VAPID</span>
+                    <span class="tag-pill tag-green">Slack SDK · /tasks /requests</span>
+                    <span class="tag-pill tag-blue">S3 presigned uploads</span>
+                    <span class="tag-pill tag-orange">HTMX · Bootstrap 5 · PWA</span>
+                    <span class="tag-pill tag-blue">Brotli · WhiteNoise · ratelimit</span>
+                    <span class="tag-pill tag-green">pytest · Locust</span>
                 </p>
             </div>
 

@@ -186,10 +186,10 @@
             </div>
 
             <div class="savings-spotlight">
-                <div class="savings-number">$1,300+</div>
-                <div class="savings-label">Estimated Monthly Savings vs. Current Tool Stack</div>
+                <div class="savings-number">$1,430–$1,755</div>
+                <div class="savings-label">Estimated Monthly Savings vs. Current Tool Stack · 60–70% more efficient than manual tracking on Basecamp etc.</div>
                 <div class="savings-detail">
-                    <strong>$15,600+</strong> saved annually · Custom-built in-house
+                    <strong>$17,150–$21,050</strong> saved annually · Custom-built in-house
                 </div>
             </div>
 
@@ -212,34 +212,31 @@
                             <td>Full PM + Slack + Analytics + Multi-tenant</td>
                         </tr>
                         <tr>
-                            <td>Basecamp Business × 3</td>
-                            <td>$1,050</td>
-                            <td>$12,600</td>
-                            <td>Basic PM only — 3 separate accounts</td>
+                            <td>Basecamp × 4–5 (@ $300 each)</td>
+                            <td>$1,200 – $1,500</td>
+                            <td>$14,400 – $18,000</td>
+                            <td>Basic PM only — 4–5 separate accounts @ $300 each</td>
                         </tr>
                         <tr>
-                            <td>Asana (Business)</td>
-                            <td>$250+</td>
-                            <td>$3,000+</td>
-                            <td>PM + workflows</td>
-                        </tr>
-                        <tr>
-                            <td>Trello (Premium)</td>
-                            <td>$100+</td>
-                            <td>$1,200+</td>
-                            <td>Kanban boards, limited automation</td>
+                            <td>Asana · 30 seats × $10.99</td>
+                            <td>$329.70</td>
+                            <td>$3,956</td>
+                            <td>PM + workflows — 30 seats @ $10.99/user/mo, billed annually</td>
                         </tr>
                     </tbody>
                 </table>
                 <div class="impact-box" style="border-left-color: var(--accent2);">
-                    <strong>Bottom Line:</strong> Company currently spends <strong>~$1,400/month</strong> across Basecamp (×3), Asana, and Trello.
-                    Switching to our engine saves <strong>$1,300+/month ($15,600+/year)</strong> — while consolidating
-                    everything into a single unified platform built specifically for <em>this</em> workflow.
+                    <strong>Bottom Line:</strong> Basecamp runs <strong>4–5 accounts @ $300 each ($1,200–$1,500/month)</strong>,
+                    plus Asana <strong>30 seats × $10.99 ($329.70/month)</strong> — a combined <strong>$1,530–$1,830/month ($18,356–$21,956/year)</strong>,
+                    all consolidated into our engine (~$75–$100/mo).
+                    That saves <strong>$1,430–$1,755/month ($17,150–$21,050/year)</strong> and runs
+                    <strong>60–70% more efficiently than manual tracking</strong> across those tools — status-chasing, follow-ups, and reporting automated instead of hand-maintained —
+                    in a single unified platform built specifically for <em>this</em> workflow.
                 </div>
             </div>
 
-            <div class="divider-label"><span>What it is</span></div>
-            <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:1rem;">Full-featured, real-time project management platform for agencies — <strong style="color:var(--text);">workspaces → clients → teams → tasks → posts &amp; comments</strong>, with an approval-orchestrated completion workflow, role-based permissions, Slack DMs, WebPush notifications, S3 file pipeline, and a Redis real-time layer. Live at production.topsoftdigitals.pk.</p>
+            <div class="divider-label"><span>What it is — TopsoftDigitals Connect</span></div>
+            <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:1rem;">Full-featured, real-time project management platform for agencies — <strong style="color:var(--text);">workspaces → clients → teams → tasks → posts &amp; comments</strong>, with an approval-orchestrated completion workflow, industry-style role-based permissions, Slack DMs, WebPush browser notifications, an S3-backed file pipeline, support tickets with SLA clocks, a superuser-managed user-manuals shelf, DM-only live chat, and a Redis-powered real-time layer. Live at production.topsoftdigitals.pk.</p>
 
             <div class="pm-hierarchy" aria-label="Platform hierarchy">
                 <span class="pm-hier-node">Workspaces <em>e.g. USA / UK</em></span>
@@ -256,17 +253,17 @@
             <div class="divider-label"><span>Architecture Overview</span></div>
 
             <div class="arch-flow">
-                <div class="arch-node">HTMX UI<span class="arch-sub">Bootstrap 5 · no SPA</span></div>
+                <div class="arch-node">HTMX UI<span class="arch-sub">Bootstrap 5 · PWA · no SPA</span></div>
                 <span class="arch-arrow">→</span>
                 <div class="arch-node">Uvicorn ASGI<span class="arch-sub">Django 6.0 + Channels 4</span></div>
                 <span class="arch-arrow">→</span>
                 <div class="arch-node">Data<span class="arch-sub">PostgreSQL · Redis · S3</span></div>
                 <span class="arch-arrow">→</span>
-                <div class="arch-node">Celery gevent ×20<span class="arch-sub">Slack · SMTP · WebPush</span></div>
+                <div class="arch-node">Celery gevent ×20<span class="arch-sub">Slack · SMTP · WebPush · Beat</span></div>
                 <span class="arch-arrow">→</span>
-                <div class="arch-node">Live<span class="arch-sub">WS /ws/notifications/</span></div>
+                <div class="arch-node">Live<span class="arch-sub">/ws/notifications/ · ws/chat/</span></div>
             </div>
-            <p class="footnote">HTTP + WebSockets on one ASGI app · Redis shared for cache, sessions, channel layer &amp; broker · S3-compatible object store via presigned URLs · static via WhiteNoise + Brotli · hosted on Railway.</p>
+            <p class="footnote">HTTP + WebSockets (<code style="font-size:0.7rem;">/ws/notifications/</code> + <code style="font-size:0.7rem;">ws/chat/</code> with 5s poll fallback) on one ASGI app · Redis shared for cache, sessions, channel layer &amp; broker · S3-compatible store (<code style="font-size:0.7rem;">t3.storageapi.dev</code>) via presigned PUT/GET for posts &amp; manuals · Celery gevent ×20 on queues <code style="font-size:0.7rem;">celery,slack,email,notifications</code> + Beat hourly email scans &amp; SLA checks · static via WhiteNoise + Brotli · hosted on Railway.</p>
 
             <div class="divider-label"><span>Task Lifecycle — approval-orchestrated</span></div>
 
@@ -306,7 +303,7 @@
                 <div class="bento-item">
                     <span class="bento-icon">🗂️</span>
                     <h4>Workspaces &amp; Clients</h4>
-                    <p>Workspaces (USA / UK) with granular membership. Clients carry required contact email, billing &amp; payment tracking (card / wire / cheque), outstanding balances, and auto-archive when work completes.</p>
+                    <p>Workspaces (USA / UK) with granular membership. Clients carry required contact email, billing &amp; payment tracking (card / wire / cheque), outstanding balances, and auto-archive when work completes. Create form checks email availability live (debounced lookup, re-verified on submit) and never flags the field just for losing focus.</p>
                 </div>
                 <div class="bento-item">
                     <span class="bento-icon">👥</span>
@@ -316,8 +313,23 @@
                 </div>
                 <div class="bento-item">
                     <span class="bento-icon">✅</span>
-                    <h4>Tasks &amp; Posts</h4>
-                    <p>Priorities low → urgent plus <code>due_status()</code> categorisation. Task-linked posts &amp; threaded comments with <code>@username</code> mentions and S3 attachments via presigned upload URLs.</p>
+                    <h4>Tasks, posts &amp; bulk actions</h4>
+                    <p>Priorities low → urgent plus <code>due_status()</code> categorisation, 3-stage workflow (pending → awaiting approval → completed), single-task team moves within the same client, and a superuser <strong style="color:var(--text);">Bulk Task Actions</strong> page (reassign / reprioritise / move, filterable by client, team, status + search). Task-linked posts &amp; threaded comments with <code>@username</code> mentions and S3 attachments via presigned URLs.</p>
+                </div>
+                <div class="bento-item">
+                    <span class="bento-icon">🎫</span>
+                    <h4>Support tickets &amp; SLA</h4>
+                    <p>Client support requests kept separate from tasks: open → in progress (auto-flip on first reply) → resolved → closed. SLA clock per priority — urgent 4h · high 24h · medium 72h · low 7 days — with green / amber (&lt;25% left) / red breached badges, a Breached tab, hourly Beat escalation, and visibility scoped to assigned clients.</p>
+                </div>
+                <div class="bento-item">
+                    <span class="bento-icon">💬</span>
+                    <h4>Live chat — DM-only</h4>
+                    <p>Floating bottom-right widget (480×620, minimize/fullscreen, non-modal): 1:1 DMs with searchable picker (<code>+ New</code> first), Slack-like timestamps + Today/Yesterday date dividers, text-only 2000-char, <code>ws/chat/</code> + 5s poll (<code>credentials:same-origin</code>), widget-local unread. Endpoints: <code>rooms/</code> 60/m · <code>messages/</code> 120/m · <code>send/</code> 30/m.</p>
+                </div>
+                <div class="bento-item">
+                    <span class="bento-icon">📖</span>
+                    <h4>User manuals shelf</h4>
+                    <p>Superuser-managed guides at <code>/manuals/</code>, visible to every logged-in user. Same presigned pattern as posts: PUT URL from <code>manuals/upload-url/</code> (60/m, extension+MIME allowlist, <code>manuals/YYYY/MM/&lt;uuid&gt;_name</code>), XHR progress bar, client-side type/size gating, presigned downloads under the original filename. Delete removes row + S3 object.</p>
                 </div>
                 <div class="bento-item">
                     <span class="bento-icon">🔔</span>
@@ -337,28 +349,28 @@
                 <div class="bento-item">
                     <span class="bento-icon">📢</span>
                     <h4>Admin Hub + Activity</h4>
-                    <p>Bulk notifications, bulk role assigns, user directory, one-click archived-client CSV export. Global audit activity feed with versioned cache invalidation. Auth: email verification, <code>@topsoftdigitals.pk</code> restriction, password reset.</p>
+                    <p>Bulk notifications, bulk role assigns, user directory, task analytics (month / year / range / all-time), one-click active- and archived-client CSV exports. Global audit activity feed with versioned cache invalidation. Auth: email verification, <code>@topsoftdigitals.pk</code> restriction, password reset.</p>
                 </div>
                 <div class="bento-item">
                     <span class="bento-icon">💳</span>
                     <h4>Sales &amp; Payments ledger</h4>
-                    <p>Superuser-only, separate from workspace clients. PPC / Upsell deals, card / cheque / wire, upfront auto-booked as a PPC payment (never double-counted), upseller attribution, PPC-vs-Upsell report with monthly / workspace / top-client breakdowns.</p>
+                    <p>Superuser-only, separate from workspace clients. PPC / Upsell deals, card / cheque / wire, upfront auto-booked as a PPC payment (Upfront badge, never double-counted), upseller attribution. Report adds Payment Type filter (PPC vs Upsell) + year / month / workspace, with monthly / workspace / top-client breakdowns. Detail page: Total PPC &amp; Upsell by mode, Upfront, Total Paid, Remaining &amp; Status; email required on create/edit.</p>
                 </div>
                 <div class="bento-item bento-wide">
                     <span class="bento-icon">🛡️</span>
                     <h4>Email &amp; chargeback alerts — 236 keywords</h4>
-                    <p>IMAP scanner flags chargeback / refund / complaint language, runs async on the <code>email</code> queue via “Scan Now”, dedupes by Message-ID, downloads text parts only, and auto-refreshes the alerts panel (5 s poll) — no manual reload. Same keyword discipline behind the dispute-tracking cases below.</p>
+                    <p>IMAP scanner flags chargeback / refund / complaint language, runs async on the <code>email</code> queue via “Scan Now” (Admin Hub → Email Alerts), dedupes by Message-ID, downloads text parts only, and auto-refreshes the alerts panel (5 s poll, Open / Resolved tabs, sender-rule noise auto-suppressed) — no manual reload. Mailboxes are <code>EmailAccount</code> rows with encrypted passwords (new accounts default <code>mail.sapientservers.com:993</code>). Same keyword discipline behind the dispute-tracking cases below.</p>
                 </div>
             </div>
 
             <div class="divider-label"><span>Performance &amp; deployment</span></div>
             <div class="pm-mini-grid">
-                <div class="pm-mini"><strong>Hot cache</strong><span>Versioned Redis fragments · 1 h TTL · pooled client</span></div>
-                <div class="pm-mini"><strong>DB diet</strong><span>select/prefetch_related + .only() · zero N+1 · indexed ordering</span></div>
-                <div class="pm-mini"><strong>Transfer</strong><span>GZip + Brotli (~70–80% smaller) · WhiteNoise manifest · paginated 10–20</span></div>
-                <div class="pm-mini"><strong>Safety</strong><span>ratelimit + 429 handler · atomic + select_for_update · cached auth (180 s)</span></div>
-                <div class="pm-mini"><strong>Railway</strong><span>Uvicorn (uvloop, conc. 256) · Celery gevent ×20 · PgBouncer · 1 shared REDIS_URL</span></div>
-                <div class="pm-mini"><strong>Tests</strong><span>pytest (SQLite :memory:, eager Celery) · Locust login + weighted hits</span></div>
+                <div class="pm-mini"><strong>Hot cache</strong><span>Versioned Redis fragments · 1 h TTL · pooled client (100 conns) · <code style="font-size:0.7rem;">pm</code> prefix</span></div>
+                <div class="pm-mini"><strong>DB diet</strong><span>select/prefetch_related + .only() · zero N+1 · index-backed ordering · PgBouncer <code style="font-size:0.7rem;">conn_max_age=600</code>, cursors off</span></div>
+                <div class="pm-mini"><strong>Transfer</strong><span>GZip + Brotli (~70–80% smaller) · WhiteNoise manifest · paginated 10–20 · collectstatic once</span></div>
+                <div class="pm-mini"><strong>Safety</strong><span>ratelimit on POSTs + 429 handler · atomic + select_for_update · cached auth (180 s) · VAPID behind <code style="font-size:0.7rem;">PUSH_ENABLED</code></span></div>
+                <div class="pm-mini"><strong>Railway</strong><span>Uvicorn (uvloop + httptools, conc. 256) · Celery gevent ×20 (<code style="font-size:0.7rem;">celery,slack,email,notifications</code>) · Beat hourly email + SLA · 1 shared REDIS_URL · S3 <code style="font-size:0.7rem;">t3.storageapi.dev</code></span></div>
+                <div class="pm-mini"><strong>Tests</strong><span>pytest (SQLite :memory:, LocMem cache, eager Celery) · Locust login + weighted hits · <code style="font-size:0.7rem;">cleanup_old_data</code> / <code style="font-size:0.7rem;">clear_versioned_caches</code></span></div>
             </div>
 
             <div class="divider-label"><span>Key Metrics</span></div>
@@ -369,12 +381,16 @@
                     <span class="kpi-label">Monthly Run Cost</span>
                 </div>
                 <div class="kpi-card kpi-green">
-                    <span class="kpi-num">94%</span>
+                    <span class="kpi-num">~95%</span>
                     <span class="kpi-label">Cost Reduction</span>
                 </div>
                 <div class="kpi-card kpi-blue">
-                    <span class="kpi-num">5</span>
+                    <span class="kpi-num">4</span>
                     <span class="kpi-label">Tools Replaced</span>
+                </div>
+                <div class="kpi-card kpi-green">
+                    <span class="kpi-num">60–70%</span>
+                    <span class="kpi-label">More Efficient vs Manual Tracking</span>
                 </div>
                 <div class="kpi-card">
                     <span class="kpi-num">∞</span>
@@ -388,12 +404,15 @@
                     <span class="tag-pill tag-gold">Python 3.13</span>
                     <span class="tag-pill tag-gold">Django 6.0</span>
                     <span class="tag-pill tag-gold">PostgreSQL + PgBouncer</span>
+                    <span class="tag-pill tag-blue">Redis — cache · sessions · broker</span>
                     <span class="tag-pill tag-blue">Channels 4 · Redis pub/sub</span>
                     <span class="tag-pill tag-blue">Celery 5 · gevent ×20</span>
-                    <span class="tag-pill tag-blue">Uvicorn · uvloop</span>
+                    <span class="tag-pill tag-blue">Uvicorn · uvloop + httptools</span>
                     <span class="tag-pill tag-green">pywebpush VAPID</span>
                     <span class="tag-pill tag-green">Slack SDK · /tasks /requests</span>
-                    <span class="tag-pill tag-blue">S3 presigned uploads</span>
+                    <span class="tag-pill tag-blue">S3 presigned — posts + manuals</span>
+                    <span class="tag-pill tag-blue">Live Chat · ws/chat/ + poll</span>
+                    <span class="tag-pill tag-blue">Tickets · SLA clock</span>
                     <span class="tag-pill tag-orange">HTMX · Bootstrap 5 · PWA</span>
                     <span class="tag-pill tag-blue">Brotli · WhiteNoise · ratelimit</span>
                     <span class="tag-pill tag-green">pytest · Locust</span>
@@ -405,9 +424,11 @@
         </div>
 
         <div class="impact-box" style="border-left-color: var(--accent2); margin-top: 0.5rem;">
-            <strong>Why build vs. buy?</strong> The company currently spends <strong>~$1,400/month</strong>
-            on Basecamp (×3), Asana, and Trello — and still needs Slack, analytics, and custom integrations
-            on top. This engine replaces <strong>all of them</strong> for ~$90/month with full control over
+            <strong>Why build vs. buy?</strong> Basecamp costs <strong>$1,200–$1,500/month
+            (4–5 accounts @ $300 each)</strong>, plus Asana <strong>30 × $10.99 ($329.70/month)</strong> — and the team still needs Slack, analytics, and custom integrations
+            on top. This engine replaces <strong>all of them</strong> for ~$90/month — saving
+            <strong>$1,430–$1,755/month</strong> and operating <strong>60–70% more efficiently than manual
+            tracking</strong> on Basecamp etc. — with full control over
             features, data, and roadmap.
         </div>
 
@@ -854,7 +875,7 @@
             </div>
             <div class="pricing-note">
                 Based on 17+ successful projects, 4 production systems, itemised recovered revenue (see Case Studies
-                section), $1,300+/month in verified tooling savings, and 4 new revenue-generating service lines.
+                section), $1,430–$1,755/month in verified tooling savings, and 4 new revenue-generating service lines.
                 Market comparison reflects sourced senior/hybrid PM+Engineering salary data for Pakistan (see sources
                 below) — not a single unverified figure.
             </div>
@@ -881,7 +902,7 @@
         <div class="impact-box" style="border-left-color: var(--accent1, var(--accent2)); margin-bottom:1.25rem;">
             <strong>Methodology &amp; Verification:</strong> Figures on this page are self-tracked by me over the
             2025–2026 evaluation period. Tooling cost savings can be verified against current subscription invoices
-            (Basecamp/Asana/Trello) vs. PM Engine hosting costs. Recovered-revenue cases are itemised above with
+            (Basecamp/Asana) vs. PM Engine hosting costs. Recovered-revenue cases are itemised above with
             references for manager/finance sign-off. I've flagged this openly so the numbers can be independently
             checked rather than taken on faith.
         </div>
@@ -896,7 +917,7 @@
                 <span class="market-label">Salary Ask</span>
             </div>
             <div class="market-item">
-                <span class="market-num">$1,400+</span>
+                <span class="market-num">$1.4–$1.8K</span>
                 <span class="market-label">USD/mo Saved in Tooling</span>
             </div>
             <div class="market-item market-green">
@@ -906,13 +927,13 @@
         </div>
 
         <div class="impact-box" style="border-left-color: var(--accent2);">
-            <strong>Value Proposition:</strong> Combining annualised tooling savings ($15,600/yr) with tracked
+            <strong>Value Proposition:</strong> Combining annualised tooling savings ($17,150–$21,050/yr) with tracked
             recovered/protected revenue ($31,749, of which $12,910 is fully confirmed and $18,839 remains
-            temporarily approved), total value delivered is approximately <strong>$47,300 (est.)</strong> over the
+            temporarily approved), total value delivered is approximately <strong>$48,900–$52,800 (est.)</strong> over the
             evaluation period. At today's exchange rate (~278 PKR/USD), the annual salary ask of
             PKR 220,000–240,000/month works out to roughly <strong>$9,500–$10,400 USD/year</strong> — meaning the
             value delivered is well above the total compensation ask even under the more conservative, confirmed-only
-            figure ($12,910 + $15,600 = $28,510).
+            figure ($12,910 + $17,150–$21,050 = $30,060–$33,960).
         </div>
     </section>
 
